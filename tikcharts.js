@@ -14,7 +14,7 @@ async function testTokchart() {
     const results = [];
 
     $(".chart-item").each((i, el) => {
-      if (i >= 10) return; // только топ-10
+      if (i >= 10) return;
 
       const title = $(el).find(".title").text().trim();
       const artist = $(el).find(".artist").text().trim();
