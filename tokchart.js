@@ -1,36 +1,26 @@
-console.log("tokchart.js started");
-
-
 import axios from "axios";
-import * as cheerio from "cheerio";
 
-async function testTokchart() {
-  try {
-    const url = "https://tokchart.com/top-songs";
-    const { data } = await axios.get(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0"
-      }
-    });
+const urls = [
+  "https://tokchart.com/top-songs",
+  "https://tokchart.com/charts/top-songs",
+  "https://tokchart.com/charts/top-100",
+  "https://tokchart.com/top-100",
+  "https://tokchart.com/"
+];
 
-    const $ = cheerio.load(data);
-    const results = [];
-
-    $(".chart-item").each((i, el) => {
-      if (i >= 10) return;
-
-      const title = $(el).find(".title").text().trim();
-      const artist = $(el).find(".artist").text().trim();
-
-      results.push({ rank: i + 1, title, artist });
-    });
-
-    console.log("Tokchart TOP-10:");
-    console.log(results);
-
-  } catch (err) {
-    console.error("Tokchart error:", err.message);
+async function testUrls() {
+  for (const url of urls) {
+    try {
+      console.log("Testing:", url);
+      const res = await axios.get(url, {
+        headers: { "User-Agent": "Mozilla/5.0" }
+      });
+      console.log("Status:", res.status, "Length:", res.data.length);
+    } catch (err) {
+      console.log("Error:", err.response?.status || err.message);
+    }
+    console.log("-----");
   }
 }
 
-testTokchart();
+testUrls();
