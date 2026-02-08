@@ -5,7 +5,7 @@ async function testTokboard() {
   try {
     console.log("tokboard.js started");
 
-    const url = "https://tokboard.com/top-songs";
+    const url = "https://tokboard.net/top-songs";
     const { data } = await axios.get(url, {
       headers: { "User-Agent": "Mozilla/5.0" }
     });
@@ -14,7 +14,11 @@ async function testTokboard() {
     console.log("HTML preview:", data.slice(0, 500));
 
     const $ = cheerio.load(data);
-    const items = $(".song-item, .chart-item");
+
+    // Попробуем несколько вариантов селекторов
+    const items = $(
+      ".song-item, .chart-item, .track, .list-item, .song"
+    );
 
     console.log("Found items:", items.length);
 
@@ -24,14 +28,14 @@ async function testTokboard() {
       if (i >= 10) return;
 
       const title =
-        $(el).find(".title, .song-title").text().trim();
+        $(el).find(".title, .song-title, .name").text().trim();
       const artist =
-        $(el).find(".artist, .song-artist").text().trim();
+        $(el).find(".artist, .song-artist, .singer").text().trim();
 
       results.push({ rank: i + 1, title, artist });
     });
 
-    console.log("Tokboard TOP-10:");
+    console.log("Tokboard.net TOP-10:");
     console.log(results);
 
   } catch (err) {
